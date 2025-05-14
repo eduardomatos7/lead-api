@@ -1,0 +1,36 @@
+{
+  "name": "lead-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch ./src/server.ts",
+    "build": "tsc",
+    "start": "node ./build/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eduardomatos7/lead-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eduardomatos7/lead-api/issues"
+  },
+  "homepage": "https://github.com/eduardomatos7/lead-api#readme",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^6.7.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.17",
+    "prisma": "^6.7.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}
