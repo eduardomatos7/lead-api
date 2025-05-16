@@ -1,6 +1,6 @@
 import { Handler } from "express";
 import prisma from "../database";
-import { CreateLeadRequestSchema } from "../schemas/LeadsRequestSchema";
+import { CreateLeadRequestSchema, UpdateLeadRequestSchema } from "../schemas/LeadsRequestSchema";
 import { HttpError } from "../errors/HttpError";
 
 export class LeadsController {
@@ -43,8 +43,31 @@ export class LeadsController {
         } catch (error) {
             next(error)
         }
+    }
+    delete: Handler = async (req, res, next) => {
+        try {
+            const id = +req.params.id
+            const leadDeleted = await prisma.lead.delete({
+                where: { id }
+            })
+            if (!leadDeleted) throw new HttpError(404, "Lead não encontrado")
+            res.json(leadDeleted)
 
 
+        } catch (error) {
+            next(error)
+        }
+    }
 
+    update: Handler = async (req, res, next) => {
+        const id = Number(req.params.id)
+        const body = UpdateLeadRequestSchema.parse(req.body)
+        const leadExists = await prisma.lead.findUnique({ where: { id } })
+        if (!leadExists) throw new HttpError(404, "Lead não encontrado")
+        const updatedLead = await prisma.lead.update({
+            where: { id },
+            data: body
+        })
+        res.status(200).json(updatedLead)
     }
 }
