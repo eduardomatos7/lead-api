@@ -29,7 +29,6 @@ model Lead {
   groups       Group[]        @relation("GroupLeads")
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
-  groupId      Int?
   LeadCampaign LeadCampaign[]
 }
 
