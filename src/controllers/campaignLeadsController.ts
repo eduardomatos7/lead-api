@@ -1,7 +1,7 @@
 import { Handler } from "express";
 import prisma from "../database";
 import { Prisma } from "@prisma/client";
-import { GetCampaignLeadsRequestSchema } from "../schemas/CampaignsRequestSchema";
+import { AddLeadRequestSchema, GetCampaignLeadsRequestSchema, UpdateLeadStatusRequestSchema } from "../schemas/CampaignsRequestSchema";
 
 export class CampaignLeadsController {
     index: Handler = async (req, res, next) => {
@@ -47,12 +47,40 @@ export class CampaignLeadsController {
         }
     }
     create: Handler = async (req, res, next) => {
+        const campaignId = +req.params.campaignId
+        const body = AddLeadRequestSchema.parse(req.body)
+        await prisma.leadCampaign.create({
+            data: {
+                campaignId,
+                leadId: body.leadId,
+                status: body.status
+            }
+        })
+        res.status(201).end()
 
     }
     update: Handler = async (req, res, next) => {
-
+        const body = UpdateLeadStatusRequestSchema.parse(req.body)
+        const updatedLeadCampaign = await prisma.leadCampaign.update({
+            data: body,
+            where: {
+                leadId_campaignId: {
+                    campaignId: Number(req.params.campaignId),
+                    leadId: Number(req.params.leadId)
+                }
+            }
+        })
+        res.json(updatedLeadCampaign)
     }
     delete: Handler = async (req, res, next) => {
-
+        const removedLead = await prisma.leadCampaign.delete({
+            where: {
+                leadId_campaignId: {
+                    campaignId: Number(req.params.campaignId),
+                    leadId: Number(req.params.leadId)
+                }
+            }
+        })
+        res.json({ removedLead })
     }
 }
