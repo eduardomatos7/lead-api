@@ -85,14 +85,31 @@ export class LeadsController {
     }
 
     update: Handler = async (req, res, next) => {
-        const id = Number(req.params.id)
-        const body = UpdateLeadRequestSchema.parse(req.body)
-        const leadExists = await prisma.lead.findUnique({ where: { id } })
-        if (!leadExists) throw new HttpError(404, "Lead não encontrado")
-        const updatedLead = await prisma.lead.update({
-            where: { id },
-            data: body
-        })
-        res.status(200).json(updatedLead)
+        try {
+            const id = Number(req.params.id)
+            const body = UpdateLeadRequestSchema.parse(req.body)
+            const leadExists = await prisma.lead.findUnique({ where: { id } })
+
+            if (!leadExists) throw new HttpError(404, "Lead não encontrado")
+            if (leadExists.status === "New" && body.status !== "Contacted") {
+                throw new HttpError(400, "um novo lead deve ser contatado antes de ter seu status atualizado para outros valores")
+            }
+
+            if (body.status === "Archived") {
+                const now = new Date()
+                const diffTime = Math.abs(now.getTime() - leadExists.updatedAt.getTime())
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+                if (diffDays < 180) throw new HttpError(400, "um lead só pode ser arquivado após 6 meses de inatividade")
+            }
+
+            const updatedLead = await prisma.lead.update({
+                where: { id },
+                data: body
+            })
+            res.status(200).json(updatedLead)
+        } catch (error) {
+            next(error)
+        }
+
     }
 }

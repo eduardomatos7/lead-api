@@ -3,7 +3,7 @@ import { LeadsController } from "../controllers/LeadsController"
 import { GroupsController } from "../controllers/GroupsController"
 import { CampaignsController } from "../controllers/CampaignsController"
 import { CampaignLeadsController } from "../controllers/campaignLeadsController"
-import { GroupLeadsController } from "../controllers/GroupLeadsController "
+import { GroupLeadsController } from "../controllers/GroupLeadsController"
 
 const router = Router()
 
