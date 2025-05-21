@@ -16,6 +16,11 @@ export class PrismaLeadsRepository implements LeadsRepository {
                     some: {
                         id: params.where?.groupId
                     }
+                },
+                LeadCampaign: {
+                    some: {
+                        campaignId: params.where?.campaignId
+                    }
                 }
             },
             orderBy: { [params.sortBy ?? "name"]: params.order },
@@ -50,6 +55,11 @@ export class PrismaLeadsRepository implements LeadsRepository {
                 groups: {
                     some: {
                         id: where?.groupId
+                    }
+                },
+                LeadCampaign: {
+                    some: {
+                        campaignId: where?.campaignId
                     }
                 }
             },
